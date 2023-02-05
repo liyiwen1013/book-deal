@@ -1,0 +1,39 @@
+.logout[data-v-245cef00] {
+    color: #44c068;
+    float: right;
+    padding: 20px;
+    cursor: pointer
+}
+
+.logout[data-v-245cef00]:hover {
+    color: #e5e747
+}
+
+a[data-v-245cef00] {
+    text-decoration: none
+}
+
+span[data-v-245cef00] {
+    pointer-events: none
+}
+
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50
+}
+
+#nav {
+    padding: 30px
+}
+
+#nav a {
+    font-weight: 700;
+    color: #2c3e50
+}
+
+#nav a.router-link-exact-active {
+    color: #42b983
+}

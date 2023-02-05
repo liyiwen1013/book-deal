@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript"  charset="utf-8"
+            src="http://connect.qq.com/qc_jssdk.js"
+            data-appid="APPID"
+            data-redirecturi="REDIRECTURI"
+    ></script>
+    <script src="//ossweb-img.qq.com/images/js/milo_bundle/milo.js"></script>
+</head>
+<body>
+<!--登录前状态 Start-->
+<div id="unlogin" class="login" style="display: block;">
+    你好，请【<a id="btn_qqlogin" href="javascript:void(0)" title="QQ登录">QQ登录</a>】
+    【<a id="btn_wxlogin" href="javascript:void(0);" title="微信登陆">微信登陆</a>】
+    【<a id="btn_wxandqqlogin" href="javascript:void(0);" title="一体化登录">QQ微信一体化登录</a>】
+</div>
+<!--登录前状态 End-->
+<!--登录后状态 Start-->
+<div id="logined" class="login" style="display: none;  ">
+    欢迎您，<span id="login_qq_span"></span>
+    <span id="ams_user_headimg"></span>　
+    【<a id="btn_logout" href="javascript:void(0)" title="注销">注销</a>】
+</div>
+<!--登录后状态 End-->
+<script>
+    milo.ready(function () {
+        need("biz.login",function(LoginManager){
+            //QQ登录
+            milo.addEvent(g('btn_qqlogin'),'click',function(e){
+                LoginManager.login();
+            });
+            //微信登录
+            milo.addEvent(g('btn_wxlogin'),'click',function(e){
+                LoginManager.loginByWx({
+                    gameDomain:"http://localhost:63340/",
+                    serviceType:"xxx"
+                });
+            });
+
+            //QQ微信一体化登录
+            milo.addEvent(g("btn_wxandqqlogin"),"click",function(){
+                LoginManager.loginByWXAndQQ({
+                    gameDomain:"http://localhost:63340/",
+                    serviceType:"xxx"
+                },function(){
+                    alert("已登录，即将刷新页面");
+                    location.reload();
+                });
+            });
+
+            //检查登录态
+            milo.addEvent(g("checkLogin"),"click",function(){
+                LoginManager.checkLogin(function(userInfo){
+                    g("loginInfobox").innerHTML="已登录:<br/>"+JSON.stringify(userInfo);
+                },function(){
+                    g("loginInfobox").innerHTML="未登录";
+                })
+            })
+
+            //注销
+            milo.addEvent(g("btn_logout"),"click",function(){
+                LoginManager.logout();
+            })
+
+            var chkLoginFunc=function(str){
+                LoginManager.checkLogin(function(){
+                    console.log("已登录: "+str);
+                },function(){
+                    console.log("未登录: "+str);
+                })
+            }
+            //执行验证登陆操作
+            LoginManager.checkLogin(function(userinfo){
+                //此处返回用户的基本信息
+                console.log("已登录：\n",userinfo);
+                //如果登陆类型是qq，使用LoginManager.getUserFace方法去获取头像
+                if (userinfo.logtype=="qq"){
+                    LoginManager.getUserFace(function(data){
+                        $("#ams_user_headimg").html("<img src=\""+data.userFace+"\"> ");
+                    });
+                }else if(userinfo.logtype=="wx"){
+                    //如果登陆类型是wx微信，就直接获取基本信息里的头像
+                    $("#ams_user_headimg").html("<img src=\""+userinfo.headimgurl+"/64\"> ");
+                }
+
+            },function(){
+                console.log("未登录");
+                //LoginManager.init();
+            });
+        });
+    });
+</script>
+</body>
+</html>
